@@ -6,6 +6,8 @@ const history = createBrowserHistory();
 
 if (window.location.hostname === "localhost") {
   axios.defaults.baseURL = "http://localhost:6001/";
+} else {
+  axios.defaults.baseURL = "https://cheap-fb.herokuapp.com/";
 }
 
 axios.interceptors.request.use(
