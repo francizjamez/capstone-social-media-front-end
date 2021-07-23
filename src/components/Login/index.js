@@ -1,17 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import {
   Button,
   Center,
-  Container,
   Flex,
   Heading,
   Input,
   InputGroup,
   InputLeftElement,
   InputRightElement,
+  Text,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import {
   AiOutlineUser,
@@ -19,15 +19,38 @@ import {
   AiOutlineEyeInvisible,
   AiOutlineEye,
 } from "react-icons/ai";
+import axios from "axios";
+import toasterContext from "../../contexts/ToasterContext";
 
 export default function Login() {
   const [show, setShow] = useState(false);
+  const [data, setData] = useState({});
+  const history = useHistory();
+
+  const { makeToast } = useContext(toasterContext);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    try {
+      const res = await axios.post("/auth/login", data);
+      const { access_token, refresh_token } = res.data;
+      localStorage.setItem("access_token", access_token);
+      localStorage.setItem("refresh_token", refresh_token);
+      history.push("/main");
+    } catch (err) {
+      if (err.response) makeToast(err.response.data, "error");
+      else {
+        makeToast(err.toString(), "error");
+      }
+    }
+  }
+
   return (
     <Center height="100vh" flexDir="column" gridGap={2}>
       <Heading as="h1" size="2xl" isTruncated>
         Devlok
       </Heading>
-      <form>
+      <form onSubmit={handleSubmit}>
         <Flex
           direction="column"
           gridGap={2}
@@ -44,14 +67,22 @@ export default function Login() {
               pointerEvents="none"
               children={<AiOutlineUser color="gray.300" />}
             />
-            <Input type="string" placeholder="Username" />
+            <Input
+              type="string"
+              placeholder="Username"
+              onChange={(e) => setData({ ...data, user_name: e.target.value })}
+            />
           </InputGroup>
           <InputGroup>
             <InputLeftElement
               pointerEvents="none"
               children={<AiOutlineLock color="gray.300" />}
             />
-            <Input type={show ? "text" : "password"} placeholder="Password" />
+            <Input
+              type={show ? "text" : "password"}
+              placeholder="Password"
+              onChange={(e) => setData({ ...data, password: e.target.value })}
+            />
             <InputRightElement width="4.5rem">
               <Button
                 h="1.75rem"
@@ -68,7 +99,7 @@ export default function Login() {
             </InputRightElement>
           </InputGroup>
           <Button type="submit" colorScheme="linkedin">
-            Submit
+            Log in
           </Button>
         </Flex>
       </form>

@@ -2,13 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
-import { BrowserRouter } from "react-router-dom";
+import { HistoryProvider } from "./interceptor";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <HistoryProvider>
       <App />
-    </BrowserRouter>
+    </HistoryProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
