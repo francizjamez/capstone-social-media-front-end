@@ -9,7 +9,6 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
-  Text,
 } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 

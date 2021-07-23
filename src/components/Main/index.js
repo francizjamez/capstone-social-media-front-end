@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/react";
 import axios from "axios";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import toasterContext from "../../contexts/ToasterContext";
 
@@ -10,7 +10,6 @@ export default function Main() {
   const { makeToast } = useContext(toasterContext);
   return (
     <div>
-      <img src="" />
       <Button variant="solid" colorScheme="linkedin" onClick={logout}>
         Log out
       </Button>
