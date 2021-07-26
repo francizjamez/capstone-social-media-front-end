@@ -1,29 +1,29 @@
-import { Button } from "@chakra-ui/react";
-import axios from "axios";
-import { useContext } from "react";
-import { useHistory } from "react-router-dom";
-import toasterContext from "../../contexts/ToasterContext";
+import { Box, Container } from "@chakra-ui/react";
 
-export default function Main() {
-  const history = useHistory();
+import AddForm from "./AddForm";
+import Feed from "./Feed";
+import FollowSuggestions from "./FollowSuggestions";
+import { MainProvider } from "./MainContext";
+import Nav from "./Nav";
 
-  const { makeToast } = useContext(toasterContext);
+export default function MainProvided() {
   return (
-    <div>
-      <Button variant="solid" colorScheme="linkedin" onClick={logout}>
-        Log out
-      </Button>
-    </div>
+    <MainProvider>
+      <Main />
+    </MainProvider>
   );
+}
 
-  async function logout() {
-    try {
-      await axios.get("/auth/logout");
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
-      history.push("/login");
-    } catch (err) {
-      makeToast(err.toString(), "error");
-    }
-  }
+function Main() {
+  return (
+    <Box height="100vh" mt={20}>
+      <Nav />
+      <Container p={4} maxW="7xl">
+        <Feed />
+        <FollowSuggestions />
+      </Container>
+
+      <AddForm />
+    </Box>
+  );
 }

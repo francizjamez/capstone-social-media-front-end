@@ -31,7 +31,7 @@ import FileBase from "react-file-base64";
 
 export default function SignUp() {
   const [state, dispatch] = useReducer(reducer, initState);
-  const { showPassword } = state;
+  const { showPassword, isLoading } = state;
   const history = useHistory();
   const toast = useToast();
 
@@ -43,7 +43,9 @@ export default function SignUp() {
         <Heading as="h2" size="2xl">
           Devlok
         </Heading>
-        <form onSubmit={(e) => handleSubmit(e, state, history, toast)}>
+        <form
+          onSubmit={(e) => handleSubmit(e, state, history, toast, dispatch)}
+        >
           <Flex
             direction="column"
             gridGap={2}
@@ -140,7 +142,12 @@ export default function SignUp() {
                 dispatch(changeData("display_picture", base64, state))
               }
             />
-            <Button type="submit" colorScheme="linkedin">
+            <Button
+              type="submit"
+              colorScheme="linkedin"
+              loadingText="Signing up"
+              isLoading={isLoading}
+            >
               Sign up
             </Button>
           </Flex>

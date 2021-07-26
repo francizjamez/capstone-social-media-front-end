@@ -1,4 +1,4 @@
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import {
   Button,
@@ -10,7 +10,7 @@ import {
   InputLeftElement,
   InputRightElement,
 } from "@chakra-ui/react";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
 import {
   AiOutlineUser,
@@ -18,32 +18,19 @@ import {
   AiOutlineEyeInvisible,
   AiOutlineEye,
 } from "react-icons/ai";
-import axios from "axios";
-import toasterContext from "../../contexts/ToasterContext";
+import LoginContext, { LoginProvider } from "./LoginContext";
 
-export default function Login() {
-  const [show, setShow] = useState(false);
-  const [data, setData] = useState({});
-  const history = useHistory();
+export default function ProvidedLogin() {
+  return (
+    <LoginProvider>
+      <Login />
+    </LoginProvider>
+  );
+}
 
-  const { makeToast } = useContext(toasterContext);
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    try {
-      const res = await axios.post("/auth/login", data);
-      const { access_token, refresh_token } = res.data;
-      localStorage.setItem("access_token", access_token);
-      localStorage.setItem("refresh_token", refresh_token);
-      history.push("/main");
-    } catch (err) {
-      if (err.response) makeToast(err.response.data, "error");
-      else {
-        makeToast(err.toString(), "error");
-      }
-    }
-  }
-
+export function Login() {
+  const { state, setData, setShowing, handleSubmit } = useContext(LoginContext);
+  const { isShowing, isLoading } = state;
   return (
     <Center height="100vh" flexDir="column" gridGap={2}>
       <Heading as="h1" size="2xl" isTruncated>
@@ -69,7 +56,7 @@ export default function Login() {
             <Input
               type="string"
               placeholder="Username"
-              onChange={(e) => setData({ ...data, user_name: e.target.value })}
+              onChange={(e) => setData("user_name", e.target.value)}
             />
           </InputGroup>
           <InputGroup>
@@ -78,18 +65,18 @@ export default function Login() {
               children={<AiOutlineLock color="gray.300" />}
             />
             <Input
-              type={show ? "text" : "password"}
+              type={isShowing ? "text" : "password"}
               placeholder="Password"
-              onChange={(e) => setData({ ...data, password: e.target.value })}
+              onChange={(e) => setData("password", e.target.value)}
             />
             <InputRightElement width="4.5rem">
               <Button
                 h="1.75rem"
                 size="sm"
-                onClick={() => setShow(!show)}
+                onClick={() => setShowing(!isShowing)}
                 variant="ghost"
               >
-                {show ? (
+                {isShowing ? (
                   <AiOutlineEye color="black" />
                 ) : (
                   <AiOutlineEyeInvisible color="black" />
@@ -97,7 +84,12 @@ export default function Login() {
               </Button>
             </InputRightElement>
           </InputGroup>
-          <Button type="submit" colorScheme="linkedin">
+          <Button
+            type="submit"
+            colorScheme="linkedin"
+            loadingText="Logging in"
+            isLoading={isLoading}
+          >
             Log in
           </Button>
         </Flex>

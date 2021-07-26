@@ -13,7 +13,6 @@ if (window.location.hostname === "localhost") {
 axios.interceptors.request.use(
   async (req) => {
     const token = localStorage.getItem("access_token");
-    console.log(token);
     if (token) {
       req.headers.Authorization = `Bearer ${token}`;
     }
@@ -34,12 +33,10 @@ axios.interceptors.response.use(
       switch (err.response.data.name) {
         case "TokenExpiredError":
           const refreshToken = localStorage.getItem("refresh_token");
-          console.log(refreshToken);
           const newAccessToken = await axios.post("/auth/refresh_token", {
             refresh_token: refreshToken,
           });
-
-          localStorage.setItem("token", newAccessToken.data.access_token);
+          localStorage.setItem("access_token", newAccessToken.data);
           history.go("/");
           break;
         default:

@@ -1,13 +1,16 @@
 import axios from "axios";
 
-export const initState = { data: {}, showPassword: false };
+export const initState = { data: {}, showPassword: false, isLoading: false };
 
 export const SET_DATA = `SET_DATA`;
 export const SET_SHOW_PASSWORD = `SET_SHOW_PASSWORD`;
+const SET_LOADING = `SET_LOADING`;
 
 export function reducer(state, action) {
   const { type, payload } = action;
   switch (type) {
+    case SET_LOADING:
+      return { ...state, isLoading: payload };
     case SET_DATA:
       return { ...state, data: payload };
     case SET_SHOW_PASSWORD:
@@ -17,9 +20,14 @@ export function reducer(state, action) {
   }
 }
 
-export async function handleSubmit(e, state, history, toast) {
+export const setLoading = (payload) => ({
+  type: SET_LOADING,
+  payload,
+});
+
+export async function handleSubmit(e, state, history, toast, dispatch) {
   e.preventDefault();
-  console.log(state);
+  dispatch(setLoading(true));
   try {
     await axios.post("auth/signup", state.data);
     history.push("/login");
@@ -33,6 +41,7 @@ export async function handleSubmit(e, state, history, toast) {
       });
     }
   }
+  dispatch(setLoading(false));
 }
 
 export const changeData = (key, value, state) => {
