@@ -14,20 +14,24 @@ import { useContext, useEffect, useState } from "react";
 import MainContext from "./MainContext";
 
 export default function Feed({ user }) {
-  const { isLoading, isError, data } = useQuery(`posts_${user}`, fetchPosts);
+  const { isLoading, isError, data } = useQuery(
+    `posts_${user || `feed`}`,
+    fetchPosts
+  );
 
   if (isLoading) return <h1>...Loading...</h1>;
   if (isError) return <h1>...Error...</h1>;
 
   return (
     <VStack flex={2} spacing={10} p={2}>
-      {data.map((post, i) => (
-        <Post data={post} key={i} />
+      {data.map((post) => (
+        <Post data={post} key={Math.random()} />
       ))}
     </VStack>
   );
 
   async function fetchPosts() {
+    console.log(`fetching posts`);
     let url = "/post";
     if (user) {
       url += `/${user}`;
@@ -47,8 +51,6 @@ function Post({ data }) {
   const { user_name } = author;
   const { makeToast } = useContext(toasterContext);
   const { state } = useContext(MainContext);
-
-  // const isLiked = dataLikes.includes(state.user._id);
 
   useEffect(() => {
     setIsLiked(dataLikes.includes(state.user._id));
