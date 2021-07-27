@@ -8,6 +8,7 @@ import MainContext from "./MainContext";
 export default function FollowerList() {
   const { isLoading, data } = useQuery("followList", fetchFollowList);
 
+  console.log(data);
   if (isLoading) {
     return (
       <Box position="fixed" flex={1} right={6} top={5}>

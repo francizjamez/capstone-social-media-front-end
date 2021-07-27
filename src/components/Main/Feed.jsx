@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useQuery } from "react-query";
 import toasterContext from "../../contexts/ToasterContext";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, memo } from "react";
 import MainContext from "./MainContext";
 
 export default function Feed({ user }) {
@@ -41,7 +41,7 @@ export default function Feed({ user }) {
   }
 }
 
-function Post({ data }) {
+const Post = memo(({ data }) => {
   const { content, author, likes: dataLikes, createdAt, _id } = data;
   const [likes, setLikes] = useState(dataLikes.length);
   const [isLiked, setIsLiked] = useState(false);
@@ -103,4 +103,4 @@ function Post({ data }) {
       makeToast(err, "error");
     }
   }
-}
+});

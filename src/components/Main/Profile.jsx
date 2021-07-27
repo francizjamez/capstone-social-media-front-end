@@ -22,6 +22,7 @@ import toasterContext from "../../contexts/ToasterContext";
 
 export default function Profile() {
   const { id } = useParams();
+
   const { isLoading, data } = useQuery(`user_profile_${id}`, fetchUser);
 
   const { state } = useContext(MainContext);
