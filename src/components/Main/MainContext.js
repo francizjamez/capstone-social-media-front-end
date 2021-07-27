@@ -7,12 +7,16 @@ const MainContext = createContext({});
 
 export default MainContext;
 
-const initState = { data: {} };
+const initState = { data: {}, user: {} };
 
 export function MainProvider({ children }) {
   const [state, setState] = useState(initState);
-  const { isLoading, data } = useQuery("user", fetchUser);
+  const { isLoading, data, isError, err } = useQuery("user", fetchUser);
   const { makeToast } = useContext(toasterContext);
+
+  if (isError) {
+    makeToast(err, "error");
+  }
 
   useEffect(() => {
     updateStateKey(`user`, data);
@@ -29,6 +33,7 @@ export function MainProvider({ children }) {
     e.preventDefault();
     await axios.post("/post", state.data);
     makeToast("Successfully added post");
+    setData(`content`, "");
     onClose();
   }
 

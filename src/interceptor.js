@@ -19,7 +19,6 @@ axios.interceptors.request.use(
     return req;
   },
   (err) => {
-    console.log(err);
     return Promise.reject(err);
   }
 );

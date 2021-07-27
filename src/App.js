@@ -12,7 +12,7 @@ function App() {
     const access_token = localStorage.getItem("access_token");
 
     if (access_token) {
-      history.push("/main");
+      history.push("/main/feed");
     } else {
       history.push("/login");
     }

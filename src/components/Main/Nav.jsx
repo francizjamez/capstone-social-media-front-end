@@ -1,8 +1,16 @@
 import axios from "axios";
 import toasterContext from "../../contexts/ToasterContext";
 import { useContext } from "react";
-import { Button, Flex, Heading, HStack, Image, Text } from "@chakra-ui/react";
-import { useHistory } from "react-router-dom";
+import {
+  Button,
+  Flex,
+  Heading,
+  HStack,
+  Image,
+  Text,
+  Link as ChakraLink,
+} from "@chakra-ui/react";
+import { useHistory, Link } from "react-router-dom";
 import MainContext from "./MainContext";
 
 export default function Nav() {
@@ -34,9 +42,14 @@ export default function Nav() {
         ></Image>
         <Text>{user_name}</Text>
       </HStack>
-      <Heading>Devlok</Heading>
+      <ChakraLink to="/main/feed" color="teal.500" as={Link}>
+        <Heading>Home</Heading>
+      </ChakraLink>
+
       <Flex gridGap={2}>
-        <Button colorScheme="linkedin">Profile</Button>
+        <Link to={`/main/profile/${user_name}`}>
+          <Button colorScheme="linkedin">Profile</Button>
+        </Link>
         <Button
           borderWidth={2}
           borderColor="black"

@@ -32,7 +32,6 @@ export async function handleSubmit(e, state, history, toast, dispatch) {
     await axios.post("auth/signup", state.data);
     history.push("/login");
   } catch (err) {
-    console.log(err);
     if (err.response) {
       toast({
         title: err.response.data,

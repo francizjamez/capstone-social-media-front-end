@@ -18,10 +18,8 @@ export function LoginProvider({ children }) {
   const history = useHistory();
 
   function setData(key, value) {
-    console.log(state.data, "state");
     const newData = { ...state.data };
     newData[key] = value;
-    console.log(newData);
     dispatch({ type: SET_DATA, payload: newData });
   }
 
@@ -33,7 +31,7 @@ export function LoginProvider({ children }) {
       const { access_token, refresh_token } = res.data;
       localStorage.setItem("access_token", access_token);
       localStorage.setItem("refresh_token", refresh_token);
-      history.push("/main");
+      history.push("/main/feed");
     } catch (err) {
       if (err.response) makeToast(err.response.data, "error");
       else {
