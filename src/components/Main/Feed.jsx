@@ -53,7 +53,8 @@ const Post = memo(({ data }) => {
   const { state } = useContext(MainContext);
 
   useEffect(() => {
-    setIsLiked(dataLikes.includes(state.user._id));
+    console.log(state.user);
+    if (state.user) setIsLiked(dataLikes.includes(state.user._id));
     // eslint-disable-next-line
   }, []);
 
@@ -100,7 +101,7 @@ const Post = memo(({ data }) => {
       }
       makeToast(res.data);
     } catch (err) {
-      makeToast(err, "error");
+      makeToast(err.toString(), "error");
     }
   }
 });

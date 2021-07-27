@@ -51,8 +51,8 @@ function User({ data }) {
   const [isFollowed, setIsFollowed] = useState(false);
 
   useEffect(() => {
-    if (state.user) {
-      setIsFollowed(followers.includes(state.user._id.toString()));
+    if (state.user._id) {
+      setIsFollowed(followers.includes(state.user._id));
       console.log(state);
       console.log(followers);
     }
