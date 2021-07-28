@@ -11,7 +11,7 @@ const initState = { data: {}, user: { _id: null } };
 
 export function MainProvider({ children }) {
   const [state, setState] = useState(initState);
-  const { isLoading, data, isError, err } = useQuery("user", fetchUser);
+  const { data, isError, err } = useQuery("user", fetchUser);
   const { makeToast } = useContext(toasterContext);
 
   console.log(`rendered Main`);
