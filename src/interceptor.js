@@ -28,20 +28,22 @@ axios.interceptors.response.use(
     return res;
   },
   async (err) => {
+    const originalRequest = err.originalRequest;
+
     if (err.response) {
       switch (err.response.data.name) {
         case "TokenExpiredError":
+          console.log(`getting newToken`);
           const refreshToken = localStorage.getItem("refresh_token");
           const newAccessToken = await axios.post("/auth/refresh_token", {
             refresh_token: refreshToken,
           });
           localStorage.setItem("access_token", newAccessToken.data);
-          history.go("/");
-          break;
+          return axios(originalRequest);
         case "refreshTokenError":
           localStorage.removeItem("refresh_token");
           localStorage.removeItem("access_token");
-          history.go("/");
+          history.push("/login");
           break;
         default:
           break;

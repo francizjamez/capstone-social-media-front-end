@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import {
   Button,
@@ -18,19 +18,17 @@ import {
   AiOutlineEyeInvisible,
   AiOutlineEye,
 } from "react-icons/ai";
-import LoginContext, { LoginProvider } from "./LoginContext";
+import useLoginStore from "./LoginStore";
+import axios from "axios";
+import toasterContext from "../../contexts/ToasterContext";
 
-export default function ProvidedLogin() {
-  return (
-    <LoginProvider>
-      <Login />
-    </LoginProvider>
-  );
-}
-
-export function Login() {
-  const { state, setData, setShowing, handleSubmit } = useContext(LoginContext);
-  const { isShowing, isLoading } = state;
+export default function Login() {
+  // const { state, setData, setShowing, handleSubmit } = useContext(LoginContext);
+  // const { isShowing, isLoading } = state;
+  const history = useHistory();
+  const { makeToast } = useContext(toasterContext);
+  const { isLoading, isShowing, setData, setShowing, setLoading, data } =
+    useLoginStore((state) => state);
   return (
     <Center height="100vh" flexDir="column" gridGap={2}>
       <Heading as="h1" size="2xl" isTruncated>
@@ -101,4 +99,22 @@ export function Login() {
       </Link>
     </Center>
   );
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await axios.post("/auth/login", data);
+      const { access_token, refresh_token } = res.data;
+      localStorage.setItem("access_token", access_token);
+      localStorage.setItem("refresh_token", refresh_token);
+      history.push("/main/feed");
+    } catch (err) {
+      if (err.response) makeToast(err.response.data, "error");
+      else {
+        makeToast(err.toString(), "error");
+      }
+    }
+    setLoading(false);
+  }
 }

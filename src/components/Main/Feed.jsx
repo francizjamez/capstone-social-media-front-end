@@ -5,21 +5,35 @@ import {
   Text,
   VStack,
   Link as ChakraLink,
+  Icon,
+  Image,
+  Flex,
+  Heading,
+  Center,
+  Spinner,
 } from "@chakra-ui/react";
+
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useQuery } from "react-query";
 import toasterContext from "../../contexts/ToasterContext";
 import { useContext, useEffect, useState, memo } from "react";
-import MainContext from "./MainContext";
+import useMainStore from "./MainStore";
+import { AiOutlineUser } from "react-icons/ai";
 
-export default function Feed({ user }) {
+const Feed = memo(({ user = "me" }) => {
+  const reloadState = useMainStore((state) => state.reloadState);
   const { isLoading, isError, data } = useQuery(
-    `posts_${user || `feed`}`,
+    [`posts_${user || `feed`}`, reloadState],
     fetchPosts
   );
 
-  if (isLoading) return <h1>...Loading...</h1>;
+  if (isLoading)
+    return (
+      <Center height="100vh">
+        <Spinner size="xl" thickness="6px" />
+      </Center>
+    );
   if (isError) return <h1>...Error...</h1>;
 
   return (
@@ -33,41 +47,63 @@ export default function Feed({ user }) {
   async function fetchPosts() {
     console.log(`fetching posts`);
     let url = "/post";
-    if (user) {
+    if (user !== `me`) {
       url += `/${user}`;
     }
+
     const res = await axios.get(url);
     return res.data;
   }
-}
+});
 
 const Post = memo(({ data }) => {
   const { content, author, likes: dataLikes, createdAt, _id } = data;
-  const [likes, setLikes] = useState(dataLikes.length);
-  const [isLiked, setIsLiked] = useState(false);
   const createdDate = new Date(createdAt);
   const dateString = createdDate.toLocaleDateString();
   const timeString = createdDate.toLocaleTimeString();
-  const { user_name } = author;
+  const { user_name, display_picture, name } = author;
+
+  const user = useMainStore((state) => state.user);
   const { makeToast } = useContext(toasterContext);
-  const { state } = useContext(MainContext);
+
+  const [likes, setLikes] = useState(dataLikes.length);
+  const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
-    console.log(state.user);
-    if (state.user) setIsLiked(dataLikes.includes(state.user._id));
+    if (user) setIsLiked(dataLikes.includes(user._id));
     // eslint-disable-next-line
   }, []);
 
   return (
     <Box borderWidth="2px" borderRadius="lg" width={["100%", "20em", "30em"]}>
       <Box py={4} px={8} bg="white">
-        <ChakraLink
-          color="teal.500"
-          as={Link}
-          to={`/main/profile/${user_name}`}
-        >
-          @{user_name}
-        </ChakraLink>
+        <Flex p={2} gridGap={3}>
+          {display_picture ? (
+            <Image
+              src={display_picture}
+              boxSize="5rem"
+              objectFit="cover"
+              borderRadius="full"
+              borderWidth="2px"
+              borderColor="black"
+            />
+          ) : (
+            <Icon as={AiOutlineUser} w="5rem" h="5rem" />
+          )}
+          <Flex flexDir="column" gridGap={3}>
+            <Heading as="h3" size="md">
+              {name}
+            </Heading>
+            <ChakraLink
+              color="teal.500"
+              as={Link}
+              to={`/main/profile/${user_name}`}
+            >
+              @{user_name}
+            </ChakraLink>
+          </Flex>
+        </Flex>
+
         <Divider borderWidth="1px" borderColor="black" />
         <Text my={4}>{content}</Text>
         <Text color="gray.600">
@@ -105,3 +141,5 @@ const Post = memo(({ data }) => {
     }
   }
 });
+
+export default Feed;

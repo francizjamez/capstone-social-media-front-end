@@ -2,6 +2,7 @@ import axios from "axios";
 import toasterContext from "../../contexts/ToasterContext";
 import { useContext } from "react";
 import { useQueryClient } from "react-query";
+import { AiOutlineUser } from "react-icons/ai";
 import {
   Button,
   Flex,
@@ -10,17 +11,18 @@ import {
   Image,
   Text,
   Link as ChakraLink,
+  Icon,
 } from "@chakra-ui/react";
 import { useHistory, Link } from "react-router-dom";
-import MainContext from "./MainContext";
+import useMainStore from "./MainStore";
 
 export default function Nav() {
   const { makeToast } = useContext(toasterContext);
-  const { state } = useContext(MainContext);
+  const user = useMainStore((state) => state.user);
   const history = useHistory();
   const queryClient = useQueryClient();
 
-  const { display_picture, user_name } = state.user || {};
+  const { display_picture, user_name } = user;
   return (
     <Flex
       position="fixed"
@@ -36,12 +38,18 @@ export default function Nav() {
       bg="gray.50"
     >
       <HStack>
-        <Image
-          src={display_picture}
-          boxSize="70px"
-          objectFit="cover"
-          borderRadius="full"
-        ></Image>
+        {display_picture ? (
+          <Image
+            src={display_picture}
+            boxSize="70px"
+            objectFit="cover"
+            borderRadius="full"
+            borderWidth="2px"
+            borderColor="black"
+          />
+        ) : (
+          <Icon as={AiOutlineUser} w="70px" h="70px" />
+        )}
         <Text>{user_name}</Text>
       </HStack>
       <ChakraLink to="/main/feed" color="teal.500" as={Link}>
@@ -50,7 +58,9 @@ export default function Nav() {
 
       <Flex gridGap={2}>
         <Link to={`/main/profile/${user_name}`}>
-          <Button colorScheme="linkedin">Profile</Button>
+          <Button colorScheme="linkedin" isLoading={!user._id}>
+            Profile
+          </Button>
         </Link>
         <Button
           borderWidth={2}

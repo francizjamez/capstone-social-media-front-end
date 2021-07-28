@@ -10,14 +10,18 @@ import {
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useContext } from "react";
+import axios from "axios";
+import { useContext, useState } from "react";
 
 import { AiOutlinePlus } from "react-icons/ai";
-import mainContext from "./MainContext";
+import toasterContext from "../../contexts/ToasterContext";
+import useMainStore from "./MainStore";
 
 export default function AddForm() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { state, setData, handleAddPost } = useContext(mainContext);
+  const [content, setContent] = useState(``);
+  const { makeToast } = useContext(toasterContext);
+  const toggleReload = useMainStore((state) => state.toggleReload);
 
   return (
     <>
@@ -39,14 +43,14 @@ export default function AddForm() {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Post something</ModalHeader>
-          <form onSubmit={(e) => handleAddPost(e, onClose)}>
+          <form onSubmit={handleAddPost}>
             <ModalBody>
               <Textarea
                 size="lg"
                 placeholder="What's on your mind?"
                 height="200px"
-                value={state.data.content}
-                onChange={(e) => setData(`content`, e.target.value)}
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
                 isRequired
               />
             </ModalBody>
@@ -63,4 +67,13 @@ export default function AddForm() {
       </Modal>
     </>
   );
+
+  async function handleAddPost(e) {
+    e.preventDefault();
+    await axios.post("/post", { content });
+    makeToast("Successfully added post");
+    setContent(`content`, "");
+    toggleReload();
+    onClose();
+  }
 }

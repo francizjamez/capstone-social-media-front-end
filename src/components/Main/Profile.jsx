@@ -2,7 +2,6 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import MainContext from "./MainContext";
 import {
   Button,
   Center,
@@ -14,35 +13,40 @@ import {
   Text,
   VStack,
   Icon,
+  Spinner,
 } from "@chakra-ui/react";
 import Feed from "./Feed";
 
 import { AiOutlineUser } from "react-icons/ai";
 import toasterContext from "../../contexts/ToasterContext";
+import useMainStore from "./MainStore";
 
 export default function Profile() {
   const { id } = useParams();
 
   const { isLoading, data } = useQuery(`user_profile_${id}`, fetchUser);
 
-  const { state } = useContext(MainContext);
+  const user = useMainStore((state) => state.user);
   const { makeToast } = useContext(toasterContext);
   const [isFollowed, setIsFollowed] = useState(false);
 
   useEffect(() => {
     if (data) {
-      const isFollowedObj = followers.find(
-        (user) => user._id === state.user._id
-      );
+      const isFollowedObj = followers.find((u) => u._id === user._id);
       if (isFollowedObj) setIsFollowed(true);
       else setIsFollowed(false);
     }
     // eslint-disable-next-line
   }, [isLoading]);
 
-  const { user_name: current_user_name } = state.user;
+  const { user_name: current_user_name } = user;
 
-  if (isLoading) return <h1>Loading</h1>;
+  if (isLoading)
+    return (
+      <Center height="100vh">
+        <Spinner size="xl" />
+      </Center>
+    );
 
   let resData = {};
 
@@ -110,7 +114,7 @@ export default function Profile() {
   async function fetchUser() {
     let userID = id;
     if (id === `me`) {
-      userID = state.user._id;
+      userID = user._id;
     }
     const res = await axios.get(`/user/${userID}`);
     return res.data;

@@ -3,12 +3,11 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import toasterContext from "../../contexts/ToasterContext";
-import MainContext from "./MainContext";
+import useMainStore from "./MainStore";
 
 export default function FollowerList() {
   const { isLoading, data } = useQuery("followList", fetchFollowList);
 
-  console.log(data);
   if (isLoading) {
     return (
       <Box position="fixed" flex={1} right={6} top={5}>
@@ -47,14 +46,13 @@ export default function FollowerList() {
 function User({ data }) {
   const { user_name, followers } = data;
   const { makeToast } = useContext(toasterContext);
-  const { state } = useContext(MainContext);
+  const user = useMainStore((state) => state.user);
   const [isFollowed, setIsFollowed] = useState(false);
 
   useEffect(() => {
-    console.log(state);
-    setIsFollowed(followers.includes(state.user._id));
+    setIsFollowed(followers.includes(user._id));
     // eslint-disable-next-line
-  }, [state]);
+  }, [user]);
 
   return (
     <Box borderWidth="2px" w="10rem" p={3}>
