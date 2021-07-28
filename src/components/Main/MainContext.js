@@ -7,21 +7,24 @@ const MainContext = createContext({});
 
 export default MainContext;
 
-const initState = { data: {}, user: {} };
+const initState = { data: {}, user: { _id: null } };
 
 export function MainProvider({ children }) {
   const [state, setState] = useState(initState);
   const { isLoading, data, isError, err } = useQuery("user", fetchUser);
   const { makeToast } = useContext(toasterContext);
 
+  console.log(`rendered Main`);
   if (isError) {
     makeToast(err, "error");
   }
 
   useEffect(() => {
-    updateStateKey(`user`, data);
+    if (data) {
+      updateStateKey(`user`, data);
+    }
     // eslint-disable-next-line
-  }, [isLoading]);
+  }, [data]);
 
   function setData(key, value) {
     const newData = { ...state.data };

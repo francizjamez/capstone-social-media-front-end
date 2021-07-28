@@ -51,11 +51,8 @@ function User({ data }) {
   const [isFollowed, setIsFollowed] = useState(false);
 
   useEffect(() => {
-    if (state.user._id) {
-      setIsFollowed(followers.includes(state.user._id));
-      console.log(state);
-      console.log(followers);
-    }
+    console.log(state);
+    setIsFollowed(followers.includes(state.user._id));
     // eslint-disable-next-line
   }, [state]);
 

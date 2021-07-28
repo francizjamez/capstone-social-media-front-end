@@ -6,6 +6,7 @@ import FollowSuggestions from "./FollowerList";
 import { MainProvider } from "./MainContext";
 import Nav from "./Nav";
 import Profile from "./Profile";
+import { memo } from "react";
 
 export default function MainProvided() {
   return (
@@ -19,7 +20,7 @@ export default function MainProvided() {
   );
 }
 
-function Main() {
+const Main = memo(function Main() {
   return (
     <>
       <Container p={4} maxW="7xl">
@@ -29,4 +30,4 @@ function Main() {
       <AddForm />
     </>
   );
-}
+});
