@@ -11,6 +11,7 @@ import {
   Heading,
   Center,
   Spinner,
+  IconButton,
 } from "@chakra-ui/react";
 
 import { Link } from "react-router-dom";
@@ -19,7 +20,7 @@ import { useQuery } from "react-query";
 import toasterContext from "../../contexts/ToasterContext";
 import { useContext, useEffect, useState, memo } from "react";
 import useMainStore from "./MainStore";
-import { AiOutlineUser } from "react-icons/ai";
+import { AiOutlineUser, AiOutlineDelete } from "react-icons/ai";
 
 const Feed = memo(({ user = "me" }) => {
   const reloadState = useMainStore((state) => state.reloadState);
@@ -41,6 +42,12 @@ const Feed = memo(({ user = "me" }) => {
       {data.map((post) => (
         <Post data={post} key={Math.random()} />
       ))}
+      {data.length === 0 && (
+        <Heading textAlign="center" size="lg">
+          No more posts to show, add a post or follow someone to start seeing
+          posts
+        </Heading>
+      )}
     </VStack>
   );
 
@@ -64,6 +71,7 @@ const Post = memo(({ data }) => {
   const { user_name, display_picture, name } = author;
 
   const user = useMainStore((state) => state.user);
+  const toggleReload = useMainStore((state) => state.toggleReload);
   const { makeToast } = useContext(toasterContext);
 
   const [likes, setLikes] = useState(dataLikes.length);
@@ -77,7 +85,11 @@ const Post = memo(({ data }) => {
   return (
     <Box borderWidth="2px" borderRadius="lg" width={["100%", "20em", "30em"]}>
       <Box py={4} px={8} bg="white">
-        <Flex p={2} gridGap={3}>
+        <Flex
+          p={2}
+          gridGap={3}
+          justify={user_name === user.user_name && "space-between"}
+        >
           {display_picture ? (
             <Image
               src={display_picture}
@@ -102,6 +114,15 @@ const Post = memo(({ data }) => {
               @{user_name}
             </ChakraLink>
           </Flex>
+          {user_name === user.user_name && (
+            <IconButton
+              colorScheme="red"
+              borderRadius="15px"
+              aria-label="Search database"
+              onClick={deletePost}
+              icon={<AiOutlineDelete />}
+            />
+          )}
         </Flex>
 
         <Divider borderWidth="1px" borderColor="black" />
@@ -115,13 +136,23 @@ const Post = memo(({ data }) => {
       <Button
         isFullWidth
         borderTopRadius={0}
-        colorScheme={isLiked ? `red` : `teal`}
+        colorScheme={isLiked ? `orange` : `teal`}
         onClick={toggleLike}
       >
         {isLiked ? `UNLIKE` : `LIKE`}
       </Button>
     </Box>
   );
+
+  async function deletePost(e) {
+    try {
+      const res = await axios.get(`/post/delete/${_id}`);
+      makeToast(res.data);
+      toggleReload();
+    } catch (err) {
+      makeToast(err.toString(), "error");
+    }
+  }
 
   async function toggleLike() {
     try {
