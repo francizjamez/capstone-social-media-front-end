@@ -38,6 +38,11 @@ axios.interceptors.response.use(
           localStorage.setItem("access_token", newAccessToken.data);
           history.go("/");
           break;
+        case "refreshTokenError":
+          localStorage.removeItem("refresh_token");
+          localStorage.removeItem("access_token");
+          history.go("/");
+          break;
         default:
           break;
       }

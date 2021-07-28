@@ -1,6 +1,7 @@
 import axios from "axios";
 import toasterContext from "../../contexts/ToasterContext";
 import { useContext } from "react";
+import { useQueryClient } from "react-query";
 import {
   Button,
   Flex,
@@ -17,6 +18,7 @@ export default function Nav() {
   const { makeToast } = useContext(toasterContext);
   const { state } = useContext(MainContext);
   const history = useHistory();
+  const queryClient = useQueryClient();
 
   const { display_picture, user_name } = state.user || {};
   return (
@@ -67,6 +69,7 @@ export default function Nav() {
       await axios.get("/auth/logout");
       localStorage.removeItem("access_token");
       localStorage.removeItem("refresh_token");
+      queryClient.clear();
       history.push("/login");
     } catch (err) {
       if (err.response.data) {

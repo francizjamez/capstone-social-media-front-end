@@ -14,7 +14,6 @@ export function MainProvider({ children }) {
   const { data, isError, err } = useQuery("user", fetchUser);
   const { makeToast } = useContext(toasterContext);
 
-  console.log(`rendered Main`);
   if (isError) {
     makeToast(err, "error");
   }
