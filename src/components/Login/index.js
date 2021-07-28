@@ -23,12 +23,11 @@ import axios from "axios";
 import toasterContext from "../../contexts/ToasterContext";
 
 export default function Login() {
-  // const { state, setData, setShowing, handleSubmit } = useContext(LoginContext);
-  // const { isShowing, isLoading } = state;
   const history = useHistory();
   const { makeToast } = useContext(toasterContext);
   const { isLoading, isShowing, setData, setShowing, setLoading, data } =
     useLoginStore((state) => state);
+
   return (
     <Center height="100vh" flexDir="column" gridGap={2}>
       <Heading as="h1" size="2xl" isTruncated>

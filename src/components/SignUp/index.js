@@ -11,6 +11,7 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
+import Compressor from "compressorjs";
 import { useReducer } from "react";
 import {
   AiOutlineEye,
@@ -27,7 +28,14 @@ import {
   reducer,
   SET_SHOW_PASSWORD,
 } from "./reducer";
-import FileBase from "react-file-base64";
+
+const labelStyle = {
+  background: "tomato",
+  padding: "0.5rem 1rem",
+  borderRadius: "0.5rem",
+  color: "white",
+  cursor: "pointer",
+};
 
 export default function SignUp() {
   const [state, dispatch] = useReducer(reducer, initState);
@@ -36,6 +44,32 @@ export default function SignUp() {
   const toast = useToast();
 
   const imgSrc = state.data.display_picture || "";
+
+  const handleCompressedUpload = (e) => {
+    const image = e.target.files[0];
+    new Compressor(image, {
+      quality: 0.7,
+      maxWidth: 300,
+      maxHeight: 300,
+      success: (compressedResult) => {
+        console.log(compressedResult.size);
+        getBase64(compressedResult, (result) => {
+          dispatch(changeData("display_picture", result, state));
+        });
+      },
+    });
+  };
+
+  function getBase64(file, cb) {
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function () {
+      cb(reader.result);
+    };
+    reader.onerror = function (error) {
+      console.log("Error: ", error);
+    };
+  }
 
   return (
     <Center height="100vh">
@@ -128,6 +162,11 @@ export default function SignUp() {
                 </Button>
               </InputRightElement>
             </InputGroup>
+            <Center>
+              <label for="file-upload" style={labelStyle}>
+                UPLOAD IMAGE
+              </label>
+            </Center>
             <Image
               src={imgSrc}
               boxSize="150px"
@@ -135,12 +174,12 @@ export default function SignUp() {
               borderRadius="full"
               alignSelf="center"
             />
-            <FileBase
+
+            <Input
+              display="none"
               type="file"
-              multiple={false}
-              onDone={({ base64 }) =>
-                dispatch(changeData("display_picture", base64, state))
-              }
+              id="file-upload"
+              onChange={handleCompressedUpload}
             />
             <Button
               type="submit"
