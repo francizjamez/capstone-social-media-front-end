@@ -44,7 +44,6 @@ const MainFeed = memo(function Main() {
 });
 
 async function fetchUser() {
-  console.log(`fetching user`);
   const res = await axios.get("/user/current");
   return res.data;
 }

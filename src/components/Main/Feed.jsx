@@ -52,7 +52,6 @@ const Feed = memo(({ user = "me" }) => {
   );
 
   async function fetchPosts() {
-    console.log(`fetching posts`);
     let url = "/post";
     if (user !== `me`) {
       url += `/${user}`;

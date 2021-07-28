@@ -52,7 +52,6 @@ export default function SignUp() {
       maxWidth: 300,
       maxHeight: 300,
       success: (compressedResult) => {
-        console.log(compressedResult.size);
         getBase64(compressedResult, (result) => {
           dispatch(changeData("display_picture", result, state));
         });

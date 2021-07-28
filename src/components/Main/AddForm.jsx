@@ -29,12 +29,12 @@ export default function AddForm() {
         colorScheme="linkedin"
         aria-label="Search database"
         isRound
-        size="md"
+        size="lg"
         color="white"
         pos="fixed"
         bottom="10"
         right={10}
-        fontSize="20px"
+        fontSize="30px"
         icon={<AiOutlinePlus />}
         onClick={onOpen}
       />

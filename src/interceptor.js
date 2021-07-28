@@ -33,7 +33,6 @@ axios.interceptors.response.use(
     if (err.response) {
       switch (err.response.data.name) {
         case "TokenExpiredError":
-          console.log(`getting newToken`);
           const refreshToken = localStorage.getItem("refresh_token");
           const newAccessToken = await axios.post("/auth/refresh_token", {
             refresh_token: refreshToken,
