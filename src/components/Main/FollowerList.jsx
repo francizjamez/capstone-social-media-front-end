@@ -63,7 +63,6 @@ export default function FollowerList() {
 }
 
 function User({ data }) {
-  console.log(data);
   const { user_name, followers, display_picture } = data;
   const { makeToast } = useContext(toasterContext);
   const user = useMainStore((state) => state.user);

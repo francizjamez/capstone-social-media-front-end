@@ -29,7 +29,7 @@ export default function Nav() {
       w="100vw"
       alignItems="center"
       justify="space-between"
-      px={6}
+      px={[2, 12, 20]}
       py={2}
       top={0}
       left={0}
@@ -38,19 +38,21 @@ export default function Nav() {
       bg="gray.50"
     >
       <HStack>
-        {display_picture ? (
-          <Image
-            src={display_picture}
-            boxSize="70px"
-            objectFit="cover"
-            borderRadius="full"
-            borderWidth="2px"
-            borderColor="black"
-          />
-        ) : (
-          <Icon as={AiOutlineUser} w="70px" h="70px" />
-        )}
-        <Text>{user_name}</Text>
+        <Flex flexDirection={["column", "column", "row"]} alignItems="center">
+          {display_picture ? (
+            <Image
+              src={display_picture}
+              boxSize="70px"
+              objectFit="cover"
+              borderRadius="full"
+              borderWidth="2px"
+              borderColor="black"
+            />
+          ) : (
+            <Icon as={AiOutlineUser} w="70px" h="70px" />
+          )}
+          <Text>{user_name}</Text>
+        </Flex>
       </HStack>
       <ChakraLink to="/main/feed" color="teal.500" as={Link}>
         <Heading as="h1" fontSize={["24px", "32px", "40px"]}>
