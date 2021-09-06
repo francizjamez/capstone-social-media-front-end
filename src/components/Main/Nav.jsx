@@ -38,7 +38,11 @@ export default function Nav() {
       bg="gray.50"
     >
       <HStack>
-        <Flex flexDirection={["column", "column", "row"]} alignItems="center">
+        <Flex
+          flexDirection={["column", "column", "row"]}
+          alignItems="center"
+          gridGap={2}
+        >
           {display_picture ? (
             <Image
               src={display_picture}
