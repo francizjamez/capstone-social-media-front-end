@@ -31,7 +31,7 @@ const Feed = memo(({ user = "me" }) => {
 
   if (isLoading)
     return (
-      <Center height="100vh">
+      <Center height="100vh" width="100vw">
         <Spinner size="xl" thickness="6px" />
       </Center>
     );
