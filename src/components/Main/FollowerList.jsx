@@ -4,6 +4,8 @@ import {
   Link as ChakraLink,
   Text,
   VStack,
+  HStack,
+  Image,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -34,7 +36,7 @@ export default function FollowerList() {
       top={0}
       left={showFollowers ? "0px" : "100vw"}
       width={["100vw", "100vw", "auto"]}
-      backgroundColor={["gray.100", "gray.100", "transparent"]}
+      backgroundColor={["white", "white", "transparent"]}
       // borderWidth="2px"
       p={8}
       // borderColor="teal.500"
@@ -58,7 +60,8 @@ export default function FollowerList() {
 }
 
 function User({ data }) {
-  const { user_name, followers } = data;
+  console.log(data);
+  const { user_name, followers, display_picture } = data;
   const { makeToast } = useContext(toasterContext);
   const user = useMainStore((state) => state.user);
   const [isFollowed, setIsFollowed] = useState(false);
@@ -70,6 +73,8 @@ function User({ data }) {
 
   return (
     <Box
+      minW="300px"
+      boxShadow="md"
       borderRadius={10}
       backgroundColor="gray.50"
       borderBottom="2px"
@@ -78,16 +83,26 @@ function User({ data }) {
       py={6}
     >
       <VStack gridGap={4}>
-        <VStack gridGap={0}>
-          <ChakraLink
-            color="teal.500"
-            as={Link}
-            to={`/main/profile/${user_name}`}
-          >
-            @{user_name}
-          </ChakraLink>
-          <Text color="gray.500">Followers: {followers.length}</Text>
-        </VStack>
+        <HStack>
+          <Image
+            src={display_picture}
+            boxSize="5rem"
+            objectFit="cover"
+            borderRadius="full"
+            borderWidth="2px"
+            borderColor="black"
+          />
+          <VStack gridGap={0}>
+            <ChakraLink
+              color="teal.500"
+              as={Link}
+              to={`/main/profile/${user_name}`}
+            >
+              @{user_name}
+            </ChakraLink>
+            <Text color="gray.500">Followers: {followers.length}</Text>
+          </VStack>
+        </HStack>
 
         <Button
           colorScheme={isFollowed ? `red` : `linkedin`}
