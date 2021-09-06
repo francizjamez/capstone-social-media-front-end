@@ -44,8 +44,9 @@ const Feed = memo(({ user = "me" }) => {
       ))}
       {data.length === 0 && (
         <Heading textAlign="center" size="lg">
-          No more posts to show, add a post or follow someone to start seeing
-          posts
+          {user !== "me"
+            ? "Try posting something"
+            : "No more posts to show, add a post or follow someone to start seeing posts"}
         </Heading>
       )}
     </VStack>
@@ -89,30 +90,33 @@ const Post = memo(({ data }) => {
           gridGap={3}
           justify={user_name === user.user_name && "space-between"}
         >
-          {display_picture ? (
-            <Image
-              src={display_picture}
-              boxSize="5rem"
-              objectFit="cover"
-              borderRadius="full"
-              borderWidth="2px"
-              borderColor="black"
-            />
-          ) : (
-            <Icon as={AiOutlineUser} w="5rem" h="5rem" />
-          )}
-          <Flex flexDir="column" gridGap={3}>
-            <Heading as="h3" size="md">
-              {name}
-            </Heading>
-            <ChakraLink
-              color="teal.500"
-              as={Link}
-              to={`/main/profile/${user_name}`}
-            >
-              @{user_name}
-            </ChakraLink>
+          <Flex gridGap={3}>
+            {display_picture ? (
+              <Image
+                src={display_picture}
+                boxSize="5rem"
+                objectFit="cover"
+                borderRadius="full"
+                borderWidth="2px"
+                borderColor="black"
+              />
+            ) : (
+              <Icon as={AiOutlineUser} w="5rem" h="5rem" />
+            )}
+            <Flex flexDir="column" gridGap={3}>
+              <Heading as="h3" size="md">
+                {name}
+              </Heading>
+              <ChakraLink
+                color="teal.500"
+                as={Link}
+                to={`/main/profile/${user_name}`}
+              >
+                @{user_name}
+              </ChakraLink>
+            </Flex>
           </Flex>
+
           {user_name === user.user_name && (
             <IconButton
               colorScheme="red"

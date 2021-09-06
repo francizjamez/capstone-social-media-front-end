@@ -1,12 +1,21 @@
-import { Box, Button, Link, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Link as ChakraLink,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import toasterContext from "../../contexts/ToasterContext";
+import useFollowerStore from "../../store/followers.store";
 import useMainStore from "./MainStore";
 
 export default function FollowerList() {
   const { isLoading, data } = useQuery("followList", fetchFollowList);
+  const showFollowers = useFollowerStore((state) => state.showFollowers);
 
   if (isLoading) {
     return (
@@ -18,16 +27,21 @@ export default function FollowerList() {
 
   return (
     <Box
-      position="fixed"
-      flex={1}
-      right={3}
-      top="7rem"
-      borderWidth="2px"
-      p={4}
-      borderColor="black"
-      borderRadius="xl"
+      zIndex={2}
+      height="100%"
+      transition="all 200ms ease-in-out"
+      position={["absolute", "absolute", "static"]}
+      top={0}
+      left={showFollowers ? "0px" : "100vw"}
+      width={["100vw", "100vw", "auto"]}
+      backgroundColor={["gray.100", "gray.100", "transparent"]}
+      // borderWidth="2px"
+      p={8}
+      // borderColor="teal.500"
+      // borderRadius="xl"
+      alignSelf="start"
     >
-      <VStack>
+      <VStack gridGap={2}>
         {data.map((user, i) => (
           <User data={user} key={i} />
         ))}
@@ -55,10 +69,26 @@ function User({ data }) {
   }, [user]);
 
   return (
-    <Box borderWidth="2px" w="10rem" p={3}>
-      <VStack>
-        <Link color="teal.500">@{user_name}</Link>
-        <Text>Followers: {followers.length}</Text>
+    <Box
+      borderRadius={10}
+      backgroundColor="gray.50"
+      borderBottom="2px"
+      borderColor="gray.300"
+      w="10rem"
+      py={6}
+    >
+      <VStack gridGap={4}>
+        <VStack gridGap={0}>
+          <ChakraLink
+            color="teal.500"
+            as={Link}
+            to={`/main/profile/${user_name}`}
+          >
+            @{user_name}
+          </ChakraLink>
+          <Text color="gray.500">Followers: {followers.length}</Text>
+        </VStack>
+
         <Button
           colorScheme={isFollowed ? `red` : `linkedin`}
           onClick={followUser}

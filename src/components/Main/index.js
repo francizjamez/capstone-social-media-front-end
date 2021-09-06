@@ -1,4 +1,4 @@
-import { Box, Container } from "@chakra-ui/react";
+import { Box, Container, Flex } from "@chakra-ui/react";
 import { Route } from "react-router-dom";
 import AddForm from "./AddForm";
 import Feed from "./Feed";
@@ -29,17 +29,22 @@ const MainFeed = memo(function Main() {
   useEffect(() => {
     if (data) setUser(data);
   }, [data, setUser]);
-
   if (isError) makeToast(err.toString() || `refetching`, `error`);
 
   return (
-    <>
-      <Container p={4} maxW="7xl">
+    <Container maxW="7xl" mt={12} p={0} pt={10}>
+      <Flex
+        overflowX="hidden"
+        minHeight="100vh"
+        maxWidth="100vw"
+        position="relative"
+        px={2}
+      >
         <Feed />
         <FollowSuggestions />
-      </Container>
+      </Flex>
       <AddForm />
-    </>
+    </Container>
   );
 });
 

@@ -53,10 +53,12 @@ export default function Nav() {
         <Text>{user_name}</Text>
       </HStack>
       <ChakraLink to="/main/feed" color="teal.500" as={Link}>
-        <Heading>Home</Heading>
+        <Heading as="h1" fontSize={["24px", "32px", "40px"]}>
+          Home
+        </Heading>
       </ChakraLink>
 
-      <Flex gridGap={2}>
+      <Flex gridGap={2} flexDirection={["column", "row"]} alignItems="center">
         <Link to={`/main/profile/${user_name}`}>
           <Button colorScheme="linkedin" isLoading={!user._id}>
             Profile
