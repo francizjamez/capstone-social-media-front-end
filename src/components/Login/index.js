@@ -31,7 +31,7 @@ export default function Login() {
   return (
     <Center height="100vh" flexDir="column" gridGap={2}>
       <Heading as="h1" size="2xl" isTruncated>
-        Devlok
+        Devhut
       </Heading>
       <form onSubmit={handleSubmit}>
         <Flex
