@@ -6,7 +6,10 @@ import {
   VStack,
   HStack,
   Image,
+  Icon,
 } from "@chakra-ui/react";
+import { AiOutlineUser } from "react-icons/ai";
+
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
@@ -84,14 +87,18 @@ function User({ data }) {
     >
       <VStack gridGap={4}>
         <HStack>
-          <Image
-            src={display_picture}
-            boxSize="5rem"
-            objectFit="cover"
-            borderRadius="full"
-            borderWidth="2px"
-            borderColor="black"
-          />
+          {display_picture ? (
+            <Image
+              src={display_picture}
+              boxSize="5rem"
+              objectFit="cover"
+              borderRadius="full"
+              borderWidth="2px"
+              borderColor="black"
+            />
+          ) : (
+            <Icon as={AiOutlineUser} w="5rem" h="5rem" />
+          )}
           <VStack gridGap={0}>
             <ChakraLink
               color="teal.500"
