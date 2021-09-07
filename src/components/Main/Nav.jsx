@@ -14,11 +14,12 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { useHistory, Link } from "react-router-dom";
-import useMainStore from "./MainStore";
+import { useSelector } from "react-redux";
 
 export default function Nav() {
   const { makeToast } = useContext(toasterContext);
-  const user = useMainStore((state) => state.user);
+  const user = useSelector((state) => state.main.user);
+
   const history = useHistory();
   const queryClient = useQueryClient();
 

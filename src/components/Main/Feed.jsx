@@ -19,11 +19,13 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import toasterContext from "../../contexts/ToasterContext";
 import { useContext, useEffect, useState, memo } from "react";
-import useMainStore from "./MainStore";
 import { AiOutlineUser, AiOutlineDelete } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleReload } from "../../redux/mainSlice";
 
 const Feed = memo(({ user = "me" }) => {
-  const reloadState = useMainStore((state) => state.reloadState);
+  const reloadState = useSelector((state) => state.main.reloadState);
+
   const { isLoading, isError, data } = useQuery(
     [`posts_${user || `feed`}`, reloadState],
     fetchPosts
@@ -70,8 +72,10 @@ const Post = memo(({ data }) => {
   const timeString = createdDate.toLocaleTimeString();
   const { user_name, display_picture, name } = author;
 
-  const user = useMainStore((state) => state.user);
-  const toggleReload = useMainStore((state) => state.toggleReload);
+  const user = useSelector((state) => state.main.user);
+
+  const dispatch = useDispatch();
+
   const { makeToast } = useContext(toasterContext);
 
   const [likes, setLikes] = useState(dataLikes.length);
@@ -151,7 +155,7 @@ const Post = memo(({ data }) => {
     try {
       const res = await axios.get(`/post/delete/${_id}`);
       makeToast(res.data);
-      toggleReload();
+      dispatch(toggleReload());
     } catch (err) {
       makeToast(err.toString(), "error");
     }

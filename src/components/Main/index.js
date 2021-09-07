@@ -6,10 +6,11 @@ import FollowSuggestions from "./FollowerList";
 import Nav from "./Nav";
 import Profile from "./Profile";
 import { memo, useContext, useEffect } from "react";
-import useMainStore from "./MainStore";
 import axios from "axios";
 import { useQuery } from "react-query";
 import toasterContext from "../../contexts/ToasterContext";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/mainSlice";
 
 export default function Main() {
   return (
@@ -22,12 +23,12 @@ export default function Main() {
 }
 
 const MainFeed = memo(function Main() {
-  const setUser = useMainStore((state) => state.setUser);
+  const dispatch = useDispatch();
   const { data, isError, err } = useQuery("user", fetchUser);
   const { makeToast } = useContext(toasterContext);
 
   useEffect(() => {
-    if (data) setUser(data);
+    if (data) dispatch(setUser(data));
   }, [data, setUser]);
   if (isError) makeToast(err.toString() || `refetching`, `error`);
 

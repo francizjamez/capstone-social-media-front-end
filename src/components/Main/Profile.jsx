@@ -19,14 +19,15 @@ import Feed from "./Feed";
 
 import { AiOutlineUser } from "react-icons/ai";
 import toasterContext from "../../contexts/ToasterContext";
-import useMainStore from "./MainStore";
+import { useSelector } from "react-redux";
 
 export default function Profile() {
   const { id } = useParams();
 
   const { isLoading, data } = useQuery(`user_profile_${id}`, fetchUser);
 
-  const user = useMainStore((state) => state.user);
+  const user = useSelector((state) => state.main.user);
+
   const { makeToast } = useContext(toasterContext);
   const [isFollowed, setIsFollowed] = useState(false);
 

@@ -4,6 +4,8 @@ import "./index.css";
 import App from "./App";
 import { HistoryProvider } from "./interceptor";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { store } from "./redux/store";
+import { Provider } from "react-redux";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,7 +19,9 @@ ReactDOM.render(
   <React.StrictMode>
     <HistoryProvider>
       <QueryClientProvider client={queryClient}>
-        <App />
+        <Provider store={store}>
+          <App />
+        </Provider>
       </QueryClientProvider>
     </HistoryProvider>
   </React.StrictMode>,

@@ -14,17 +14,16 @@ import axios from "axios";
 import { useContext, useState } from "react";
 
 import { AiOutlinePlus } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
 import toasterContext from "../../contexts/ToasterContext";
-import useFollowerStore from "../../store/followers.store";
-import useMainStore from "./MainStore";
+import { setShowFollowers, toggleReload } from "../../redux/mainSlice";
 
 export default function AddForm() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [content, setContent] = useState(``);
   const { makeToast } = useContext(toasterContext);
-  const toggleReload = useMainStore((state) => state.toggleReload);
-  const setShowFollowers = useFollowerStore((state) => state.setShowFollowers);
-  const showFollowers = useFollowerStore((state) => state.showFollowers);
+  const dispatch = useDispatch();
+  const showFollowers = useSelector((state) => state.main.showFollowers);
 
   return (
     <>
@@ -50,7 +49,7 @@ export default function AddForm() {
         bottom={10}
         display={["block", "block", "none"]}
         left={10}
-        onClick={() => setShowFollowers(!showFollowers)}
+        onClick={() => dispatch(setShowFollowers(!showFollowers))}
       >
         Follow
       </Button>
@@ -88,8 +87,8 @@ export default function AddForm() {
     e.preventDefault();
     await axios.post("/post", { content });
     makeToast("Successfully added post");
-    setContent(`content`, "");
-    toggleReload();
+    setContent("");
+    dispatch(toggleReload());
     onClose();
   }
 }

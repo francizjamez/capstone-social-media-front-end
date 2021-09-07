@@ -15,12 +15,11 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import toasterContext from "../../contexts/ToasterContext";
-import useFollowerStore from "../../store/followers.store";
-import useMainStore from "./MainStore";
+import { useSelector } from "react-redux";
 
 export default function FollowerList() {
   const { isLoading, data } = useQuery("followList", fetchFollowList);
-  const showFollowers = useFollowerStore((state) => state.showFollowers);
+  const showFollowers = useSelector((state) => state.main.showFollowers);
 
   if (isLoading) {
     return (
@@ -40,10 +39,7 @@ export default function FollowerList() {
       left={showFollowers ? "0px" : "100vw"}
       width={["100vw", "100vw", "auto"]}
       backgroundColor={["white", "white", "transparent"]}
-      // borderWidth="2px"
       p={8}
-      // borderColor="teal.500"
-      // borderRadius="xl"
       alignSelf="start"
     >
       <VStack gridGap={2}>
@@ -65,7 +61,8 @@ export default function FollowerList() {
 function User({ data }) {
   const { user_name, followers, display_picture } = data;
   const { makeToast } = useContext(toasterContext);
-  const user = useMainStore((state) => state.user);
+  const user = useSelector((state) => state.main.user);
+
   const [isFollowed, setIsFollowed] = useState(false);
 
   useEffect(() => {
